@@ -1,819 +1,340 @@
 <!DOCTYPE html>
-
 <html lang="pl">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Próba Liczebników Azeroth</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=Sorts+Mill+Goudy:ital@0;1&display=swap" rel="stylesheet">
-
-<style>
-
-body {
-
-font-family: 'Sorts Mill Goudy', serif;
-
-/* Path to your background image in the 'images' folder */
-
-background-image: url('images/background.jpg'); /* ZMIEŃ NA NAZWĘ SWOJEGO PLIKU TŁA */
-
-background-color: #1c1c1c; /* Fallback color */
-
-background-size: cover;
-
-background-position: center center;
-
-background-repeat: no-repeat;
-
-background-attachment: fixed;
-
-color: #f0e6d2; 
-
-display: flex;
-
-justify-content: center;
-
-align-items: center;
-
-min-height: 100vh;
-
-padding: 1rem;
-
-overflow-y: auto;
-
-}
-
-.quiz-container {
-
-max-width: 800px;
-
-margin: 2rem auto;
-
-padding: 2.5rem 3rem;
-
-background-color: rgba(30, 25, 20, 0.92);
-
-border: 5px solid #000000; 
-
-border-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cstyle%3Epath%7Bfill%3Anone%3Bstroke%3A%237a5c3e%3Bstroke-width%3A10%3B%7D%3C%2Fstyle%3E%3Cpath%20d%3D%22M0%200%20L100%200%20L100%20100%20L0%20100%20Z%22%2F%3E%3C%2Fsvg%3E') 20 / 20px / 0 round; 
-
-box-shadow: 0 0 35px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0,0,0,0.6);
-
-border-radius: 2px; 
-
-}
-
-
-.title-text {
-
-font-family: 'Uncial Antiqua', cursive;
-
-font-size: 2.8rem; 
-
-color: #ffc107; 
-
-text-shadow: 3px 3px 5px #000000, 0 0 12px #ff8c00;
-
-text-align: center;
-
-margin-bottom: 2.5rem;
-
-}
-
-
-.question-text {
-
-font-size: 1.3rem; 
-
-color: #fff8e7; 
-
-margin-bottom: 1.5rem;
-
-line-height: 1.7;
-
-text-shadow: 1px 1px 3px #000;
-
-}
-
-.answer-input {
-
-width: 100%;
-
-padding: 0.8rem 1.2rem;
-
-border: 2px solid #4a3b2a; 
-
-background-color: rgba(10, 5, 0, 0.75);
-
-border-radius: 3px;
-
-margin-bottom: 1.5rem;
-
-font-size: 1.15rem;
-
-color: #ffc107; 
-
-font-family: 'Sorts Mill Goudy', serif;
-
-box-shadow: inset 0 0 8px rgba(0,0,0,0.6);
-
-}
-
-.answer-input::placeholder {
-
-color: #a08c6a; 
-
-font-style: italic;
-
-}
-
-
-.btn {
-
-padding: 0.9rem 2rem;
-
-border-radius: 3px;
-
-font-weight: normal; 
-
-font-family: 'Uncial Antiqua', cursive; 
-
-font-size: 1.2rem;
-
-cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADKSURBVEhL7ZRLCsQwCEV9Wf9Lq6hVfMBPEcRJSQplC7tM5jYzc7NnZt4Y4N8YgB0gB6SAHFCGxxpYL7VvBTiA7qgDbpAHe6AGe6AG+6AGHKAffoA7EEBnDxCwB0JgB8xgFwzABsxgDwyAGzABdhADdgAOfgE5IAekgBzQhT0gB2QAOagD+UDXfVYr0AN6oAZ6oAZ6oAZ6oAc0oAf0gB7Qg33Qg33Qg33Qg33Qg33Qg33Qg33Qgx3Qgx3Qgx3Qgx3Qgx3Qgx3Qgx3Qgx3Qgx3Qgy14AW2tAR71Z9btAAAAAElFTkSuQmCC') 12 12, pointer; 
-
-transition: all 0.2s ease-in-out;
-
-text-transform: uppercase;
-
-letter-spacing: 1.5px;
-
-border: 2px solid #000;
-
-position: relative;
-
-color: #ffde7a; 
-
-text-shadow: 1px 1px 1px #000;
-
-}
-
-.btn-primary { 
-
-background: linear-gradient(to bottom, #5c432a 0%, #3e2d1c 100%); 
-
-border-color: #2a1f14 #1c140d #1c140d #2a1f14; 
-
-box-shadow: 0 0 0 1px #7b5e44, inset 0 0 5px rgba(255,222,122,0.2), 0 2px 3px rgba(0,0,0,0.5);
-
-}
-
-.btn-primary:hover {
-
-background: linear-gradient(to bottom, #6c533a 0%, #4e3d2c 100%);
-
-color: #fff;
-
-box-shadow: 0 0 0 1px #8b6e54, inset 0 0 8px rgba(255,222,122,0.4), 0 2px 3px rgba(0,0,0,0.5);
-
-}
-
-.btn-secondary { 
-
-background: linear-gradient(to bottom, #4a5c2a 0%, #2d3e1c 100%); 
-
-border-color: #1f2a14 #141c0d #141c0d #1f2a14;
-
-box-shadow: 0 0 0 1px #5e7b44, inset 0 0 5px rgba(222,255,122,0.2), 0 2px 3px rgba(0,0,0,0.5);
-
-}
-
-.btn-secondary:hover {
-
-background: linear-gradient(to bottom, #5a6c3a 0%, #3d4e2c 100%);
-
-color: #fff;
-
-box-shadow: 0 0 0 1px #6e8b54, inset 0 0 8px rgba(222,255,122,0.4), 0 2px 3px rgba(0,0,0,0.5);
-
-}
-
-
-.feedback {
-
-margin-top: 1.5rem;
-
-padding: 1.2rem;
-
-border-radius: 2px;
-
-font-size: 1.1rem;
-
-font-family: 'Sorts Mill Goudy', serif;
-
-text-align: center;
-
-border-width: 3px;
-
-border-style: solid;
-
-text-shadow: 1px 1px 1px #000;
-
-}
-
-.feedback-correct {
-
-background-color: rgba(20, 60, 20, 0.75); 
-
-color: #90ee90; 
-
-border-color: #228B22; 
-
-box-shadow: 0 0 10px #50C878, inset 0 0 5px rgba(0,0,0,0.3);
-
-}
-
-.feedback-incorrect {
-
-background-color: rgba(80, 20, 20, 0.75); 
-
-color: #ff7f7f; 
-
-border-color: #8B0000; 
-
-box-shadow: 0 0 10px #DC143C, inset 0 0 5px rgba(0,0,0,0.3);
-
-}
-
-.feedback-incorrect strong {
-
-color: #ffc107; 
-
-}
-
-
-.score-container {
-
-margin-top: 2rem;
-
-font-size: 1.6rem; 
-
-font-family: 'Uncial Antiqua', cursive;
-
-color: #ffc107; 
-
-text-align: center;
-
-text-shadow: 2px 2px 3px #000;
-
-}
-
-.progress-bar-container {
-
-width: 100%;
-
-background-color: rgba(0,0,0,0.5); 
-
-border-radius: 2px;
-
-margin-bottom: 1.5rem;
-
-border: 2px solid #332211;
-
-padding: 3px; 
-
-height: 28px; 
-
-}
-
-.progress-bar {
-
-height: 100%; 
-
-background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); 
-
-background-size: 200% 100%;
-
-animation: progressBarAnimation 3s linear infinite;
-
-width: 0%;
-
-transition: width 0.4s ease-in-out;
-
-border-radius: 0px; 
-
-box-shadow: inset 0 0 5px rgba(0,0,0,0.4);
-
-}
-
-@keyframes progressBarAnimation {
-
-0% { background-position: 0% 50%; }
-
-50% { background-position: 100% 50%; }
-
-100% { background-position: 0% 50%; }
-
-}
-
-
-#question-counter {
-
-color: #bda07e; 
-
-font-size: 0.9rem;
-
-margin-bottom: 0.4rem;
-
-text-align: right;
-
-font-family: 'Sorts Mill Goudy', serif;
-
-}
-
-
-.tooltip {
-
-position: relative;
-
-display: inline-block;
-
-cursor: help; 
-
-border-bottom: 1px dashed #ffc107; 
-
-}
-
-.tooltip .tooltiptext {
-
-visibility: hidden;
-
-width: 250px; 
-
-background-color: rgba(10, 5, 0, 0.95); 
-
-color: #f0e6d2; 
-
-text-align: left; 
-
-border-radius: 2px;
-
-padding: 12px; 
-
-position: absolute;
-
-z-index: 10;
-
-bottom: 140%; 
-
-left: 50%;
-
-margin-left: -125px; 
-
-opacity: 0;
-
-transition: opacity 0.3s;
-
-box-shadow: 0 0 15px rgba(0,0,0,0.7);
-
-border: 1px solid #4a3b2a; 
-
-font-family: 'Sorts Mill Goudy', serif;
-
-font-size: 0.95rem;
-
-}
-
-.tooltip .tooltiptext::after { 
-
-content: "";
-
-position: absolute;
-
-top: 100%;
-
-left: 50%;
-
-margin-left: -7px;
-
-border-width: 7px;
-
-border-style: solid;
-
-border-color: #4a3b2a transparent transparent transparent; 
-
-}
-
-.tooltip:hover .tooltiptext {
-
-visibility: visible;
-
-opacity: 1;
-
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test z Liczebników Polskich</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles not easily achievable with Tailwind, primarily for tooltip arrow */
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease; /* Smooth transition for background */
+        }
+        body.dark {
+            background-color: #1a202c; /* Dark background */
+        }
+        .quiz-container {
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for container */
+        }
+        .quiz-container.dark {
+            background-color: #2d3748; /* Darker container */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.25);
+        }
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -7px;
+            border-width: 7px;
+            border-style: solid;
+            border-color: #4b5563 transparent transparent transparent; /* Matches bg-gray-700 */
+        }
+        .tooltip .tooltiptext {
+             /* Existing styles */
+             transition: opacity 0.3s, visibility 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        /* Dark mode specific tooltip arrow */
+        body.dark .tooltip .tooltiptext::after {
+            border-color: #4a5568 transparent transparent transparent; /* Darker tooltip background */
+        }
+    </style>
 </head>
-
-<body>
-
-<!-- Audio elements for sound effects -->
-
-<audio id="sound-correct" src="sounds/correct.mp3" preload="auto"></audio>
-
-<audio id="sound-incorrect" src="sounds/incorrect.mp3" preload="auto"></audio>
-
-<audio id="sound-click" src="sounds/click.mp3" preload="auto"></audio>
-
-<!-- ZMIEŃ NAZWY PLIKÓW DŹWIĘKOWYCH, JEŚLI SĄ INNE -->
-
-
-<div class="quiz-container">
-
-<h1 class="title-text">Próba Liczebników Azeroth</h1>
-
-<div id="progress-container" class="mb-4">
-
-<p id="question-counter"></p>
-
-<div class="progress-bar-container">
-
-<div id="progress-bar" class="progress-bar"></div>
-
-</div>
-
-</div>
-
-
-<div id="quiz-area">
-
-<p id="question-text" class="question-text"></p>
-
-<input type="text" id="answer-input" class="answer-input" placeholder="Wpisz swą odpowiedź, bohaterze...">
-
-<button id="submit-btn" class="btn btn-primary w-full sm:w-auto">Poczuj moc!</button>
-
-<button id="next-btn" class="btn btn-secondary w-full sm:w-auto mt-3 sm:mt-0 sm:ml-3" style="display: none;">Odbierz Nagrodę</button> 
-
-</div>
-
-
-<div id="feedback-area" class="feedback" style="display: none;"></div>
-
-<div id="score-area" class="score-container" style="display: none;"></div>
-
-<button id="restart-btn" class="btn btn-secondary w-full mt-4" style="display: none;">Rozpocznij Nową Przygodę</button>
-
-</div>
-
-
-<script>
-
-// Get audio elements
-
-const soundCorrect = document.getElementById('sound-correct');
-
-const soundIncorrect = document.getElementById('sound-incorrect');
-
-const soundClick = document.getElementById('sound-click');
-
-
-// Function to play a sound from <audio> element
-
-function playSound(type) {
-
-try {
-
-if (type === 'correct' && soundCorrect) {
-
-soundCorrect.currentTime = 0; // Rewind to start
-
-soundCorrect.play();
-
-} else if (type === 'incorrect' && soundIncorrect) {
-
-soundIncorrect.currentTime = 0;
-
-soundIncorrect.play();
-
-} else if (type === 'click' && soundClick) {
-
-soundClick.currentTime = 0;
-
-soundClick.play();
-
-}
-
-} catch (e) {
-
-console.error("Error playing sound:", e);
-
-// Fallback or no sound if error
-
-}
-
-}
-
-
-const questions = [
-
-{ question: "Na ławce siedzi (1) ______ chłopiec.", hint: "Podaj odpowiednią formę liczebnika 'jeden'.", answer: "jeden" },
-
-{ question: "(1) ______ studentka nie zdała egzaminu.", hint: "Podaj odpowiednią formę liczebnika 'jeden'.", answer: "Jedna" },
-
-{ question: "Na ławce siedziało (3) ______ chłopców.", hint: "Podaj formę liczebnika 'trzy' (dla osób, dopełniacz lm).", answer: "trzech" },
-
-{ question: "Na ławce siedzieli (3) ______ chłopcy.", hint: "Podaj formę liczebnika 'trzy' (dla osób, mianownik lm).", answer: "trzej" },
-
-{ question: "Na gałęzi siedziały (3) ______ ptaki.", hint: "Podaj formę liczebnika 'trzy' (dla zwierząt/rzeczy niemęskoosobowych).", answer: "trzy" },
-
-{ question: "(3) ______ bułki leżą na stole.", hint: "Podaj formę liczebnika 'trzy' (dla r. żeńskiego).", answer: "Trzy" },
-
-{ question: "(3) ______ ciastka leżały na stole.", hint: "Podaj formę liczebnika 'trzy' (dla r. nijakiego).", answer: "Trzy" },
-
-{ question: "(6) ______ panów szło ulicą.", hint: "Podaj formę liczebnika 'sześć' (dla osób).", answer: "Sześciu" },
-
-{ question: "(6) ______ kotów leżało na podłodze.", hint: "Podaj formę liczebnika 'sześć' (dla zwierząt/rzeczy niemęskoosobowych).", answer: "Sześć" },
-
-{ question: "(6) ______ książek leżało na półce.", hint: "Podaj formę liczebnika 'sześć' (dla r. żeńskiego).", answer: "Sześć" },
-
-{ question: "Na ławce siedzi dwóch ______ (chłopiec).", hint: "Podaj rzeczownik w odpowiedniej formie.", answer: "chłopców" },
-
-{ question: "Na ławce siedzą dwaj ______ (chłopiec).", hint: "Podaj rzeczownik w odpowiedniej formie.", answer: "chłopcy" },
-
-{ question: "Dwie ______ (studentka) nie zdały egzaminu.", hint: "Podaj rzeczownik w odpowiedniej formie.", answer: "studentki" },
-
-{ question: "Pięciu ______ (pan) idzie ulicą.", hint: "Podaj rzeczownik w odpowiedniej formie.", answer: "panów" },
-
-{ question: "Pięciu panów ______ (iść) ulicą.", hint: "Podaj czasownik w odpowiedniej formie.", answer: "idzie" },
-
-{ question: "Dwaj chłopcy ______ (siedzieć) na ławce.", hint: "Podaj czasownik w odpowiedniej formie.", answer: "siedzą" },
-
-{ question: "______ (3 - liczebnik zbiorowy) dzieci biegało po parku.", hint: "Podaj liczebnik zbiorowy.", answer: "Troje" },
-
-{ question: "Na półce leżało dużo ______ (książka).", hint: "Podaj rzeczownik w odpowiedniej formie.", answer: "książek" },
-
-{ question: "Kilka osób ______ (czekać) na autobus.", hint: "Podaj czasownik w odpowiedniej formie.", answer: "czekało" },
-
-{ question: "Nie mam ______ (jeden) słownika.", hint: "Odmień liczebnik 'jeden'.", answer: "jednego" }
-
-];
-
-
-let currentQuestionIndex = 0;
-
-let score = 0;
-
-let autoNextTimeout; 
-
-
-const questionTextElement = document.getElementById('question-text');
-
-const answerInputElement = document.getElementById('answer-input');
-
-const submitButton = document.getElementById('submit-btn');
-
-const nextButton = document.getElementById('next-btn'); 
-
-const feedbackArea = document.getElementById('feedback-area');
-
-const scoreArea = document.getElementById('score-area');
-
-const restartButton = document.getElementById('restart-btn');
-
-const questionCounterElement = document.getElementById('question-counter');
-
-const progressBarElement = document.getElementById('progress-bar');
-
-
-function loadQuestion() {
-
-clearTimeout(autoNextTimeout); 
-
-if (currentQuestionIndex < questions.length) {
-
-const currentQuestion = questions[currentQuestionIndex];
-
-let questionHTML = currentQuestion.question.replace(/______/, 
-
-'<span class="tooltip">______<span class="tooltiptext">' + (currentQuestion.hint || 'Wpisz swą odpowiedź') + '</span></span>');
-
-questionTextElement.innerHTML = questionHTML; 
-
-answerInputElement.value = '';
-
-feedbackArea.style.display = 'none';
-
-submitButton.style.display = 'inline-block';
-
-nextButton.style.display = 'none'; 
-
-answerInputElement.disabled = false;
-
-answerInputElement.focus();
-
-updateProgress();
-
-} else {
-
-showFinalScore();
-
-}
-
-}
-
-function updateProgress() {
-
-questionCounterElement.textContent = `Misja ${currentQuestionIndex + 1} z ${questions.length}`; 
-
-const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
-
-progressBarElement.style.width = `${progressPercentage}%`;
-
-}
-
-
-function handleSubmit() {
-
-playSound('click'); 
-
-
-const userAnswer = answerInputElement.value.trim();
-
-if (currentQuestionIndex < 0 || currentQuestionIndex >= questions.length) {
-
-console.error("Invalid currentQuestionIndex:", currentQuestionIndex);
-
-return; 
-
-}
-
-const correctAnswer = questions[currentQuestionIndex].answer;
-
-
-feedbackArea.style.display = 'block';
-
-answerInputElement.disabled = true;
-
-submitButton.style.display = 'none'; 
-
-
-if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
-
-score++;
-
-feedbackArea.textContent = 'Zadanie Wykonane!'; 
-
-feedbackArea.className = 'feedback feedback-correct';
-
-playSound('correct');
-
-} else {
-
-feedbackArea.innerHTML = `Misja Nieudana! <br>Prawidłowa odpowiedź: <strong>${correctAnswer}</strong>`; 
-
-feedbackArea.className = 'feedback feedback-incorrect';
-
-playSound('incorrect');
-
-}
-
-
-if (currentQuestionIndex < questions.length - 1) {
-
-autoNextTimeout = setTimeout(() => {
-
-handleNext();
-
-}, 2500); 
-
-} else {
-
-nextButton.textContent = 'Odbierz Nagrodę'; 
-
-nextButton.style.display = 'inline-block';
-
-nextButton.focus();
-
-}
-
-}
-
-
-function handleNext() {
-
-playSound('click'); 
-
-clearTimeout(autoNextTimeout); 
-
-currentQuestionIndex++;
-
-if (currentQuestionIndex < questions.length) {
-
-loadQuestion();
-
-} else {
-
-showFinalScore();
-
-}
-
-}
-
-function showFinalScore() {
-
-clearTimeout(autoNextTimeout); 
-
-document.getElementById('quiz-area').style.display = 'none';
-
-feedbackArea.style.display = 'none';
-
-document.getElementById('progress-container').style.display = 'none'; 
-
-scoreArea.style.display = 'block';
-
-scoreArea.innerHTML = `Próba Zakończona! <br>Zdobyte Doświadczenie: ${score} z ${questions.length} (${Math.round((score/questions.length)*100)}%)`; 
-
-restartButton.style.display = 'block';
-
-nextButton.style.display = 'none'; 
-
-}
-
-
-function restartQuiz() {
-
-playSound('click');
-
-clearTimeout(autoNextTimeout);
-
-currentQuestionIndex = 0;
-
-score = 0;
-
-document.getElementById('quiz-area').style.display = 'block';
-
-scoreArea.style.display = 'none';
-
-restartButton.style.display = 'none';
-
-document.getElementById('progress-container').style.display = 'block'; 
-
-nextButton.textContent = 'Odbierz Nagrodę'; 
-
-loadQuestion();
-
-}
-
-answerInputElement.addEventListener('keypress', function(event) {
-
-if (event.key === 'Enter') {
-
-if (submitButton.style.display !== 'none' && !answerInputElement.disabled) {
-
-handleSubmit();
-
-} else if (nextButton.style.display !== 'none' && currentQuestionIndex >= questions.length -1) {
-
-handleNext(); 
-
-}
-
-}
-
-});
-
-
-// Add event listeners to buttons to play click sound
-
-submitButton.addEventListener('click', handleSubmit);
-
-nextButton.addEventListener('click', handleNext); 
-
-restartButton.addEventListener('click', restartQuiz);
-
-
-// Initial load
-
-loadQuestion();
-
-</script>
-
+<body class="bg-gray-100 flex justify-center items-center min-h-screen p-4 dark:bg-gray-900">
+
+    <div class="quiz-container bg-white rounded-lg shadow-xl p-8 max-w-2xl w-full dark:bg-gray-800">
+        <div class="flex justify-end mb-4">
+            <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-300">
+                <!-- Sun/Moon icon - using SVG for simplicity -->
+                <svg id="sun-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M3 12h1m15.325-4.275l-.707-.707M4.372 19.372l-.707-.707m10.606 0l.707-.707M4.372 4.372l-.707-.707M18 12a6 6 0 11-12 0 6 6 0 0112 0z"></path>
+                </svg>
+                <svg id="moon-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <h1 class="text-4xl font-bold text-gray-800 text-center mb-8 dark:text-gray-100">Test z Liczebników Polskich</h1>
+
+        <div id="progress-container" class="mb-6">
+            <p id="question-counter" class="text-sm text-gray-500 text-right mb-2 dark:text-gray-400"></p>
+            <div class="progress-bar-container w-full bg-gray-200 rounded-full h-4 overflow-hidden dark:bg-gray-700">
+                <div id="progress-bar" class="progress-bar bg-blue-500 h-full rounded-full transition-all duration-400 ease-in-out" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <div id="quiz-area">
+            <p id="question-text" class="text-lg text-gray-700 mb-6 leading-relaxed dark:text-gray-200"></p>
+            <input type="text" id="answer-input" class="answer-input border border-gray-300 rounded-md p-3 w-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400" placeholder="Wpisz swoją odpowiedź...">
+
+            <div class="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-3">
+                <button id="submit-btn" class="btn bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-md transition duration-300 ease-in-out w-full sm:w-auto dark:bg-blue-700 dark:hover:bg-blue-800">
+                    Sprawdź odpowiedź
+                </button>
+                <button id="next-btn" class="btn bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-md transition duration-300 ease-in-out w-full sm:w-auto dark:bg-gray-700 dark:hover:bg-gray-600" style="display: none;">
+                    Następne pytanie
+                </button>
+            </div>
+        </div>
+
+        <div id="feedback-area" class="feedback mt-6 p-4 rounded-md text-center text-base" style="display: none;"></div>
+
+        <div id="score-area" class="score-container mt-8 text-2xl font-bold text-gray-800 text-center dark:text-gray-100" style="display: none;"></div>
+
+        <div id="final-buttons" class="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-3 mt-6" style="display: none;">
+            <button id="restart-btn" class="btn bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-md transition duration-300 ease-in-out w-full sm:w-auto dark:bg-gray-700 dark:hover:bg-gray-600">
+                Rozpocznij ponownie
+            </button>
+            <button id="retry-incorrect-btn" class="btn bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-md transition duration-300 ease-in-out w-full sm:w-auto dark:bg-red-700 dark:hover:bg-red-800">
+                Powtórz błędne pytania
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const originalQuestions = [
+            { question: "Na ławce siedzi (1) ______ chłopiec.", hint: "Podaj odpowiednią formę liczebnika 'jeden'.", answer: "jeden" },
+            { question: "(1) ______ studentka nie zdała egzaminu.", hint: "Podaj odpowiednią formę liczebnika 'jeden'.", answer: "Jedna" },
+            { question: "Na ławce siedziało (3) ______ chłopców.", hint: "Podaj formę liczebnika 'trzy' (dla osób, dopełniacz lm).", answer: "trzech" },
+            { question: "Na ławce siedzieli (3) ______ chłopcy.", hint: "Podaj formę liczebnika 'trzy' (dla osób, mianownik lm).", answer: "trzej" },
+            { question: "Na gałęzi siedziały (3) ______ ptaki.", hint: "Podaj formę liczebnika 'trzy' (dla zwierząt/rzeczy niemęskoosobowych).", answer: "trzy" },
+            { question: "(3) ______ bułki leżą na stole.", hint: "Podaj formę liczebnika 'trzy' (dla r. żeńskiego).", answer: "Trzy" },
+            { question: "(3) ______ ciastka leżały na stole.", hint: "Podaj formę liczebnika 'trzy' (dla r. nijakiego).", answer: "Trzy" },
+            { question: "(6) ______ panów szło ulicą.", hint: "Podaj formę liczebnika 'sześć' (dla osób).", answer: "Sześciu" },
+            { question: "(6) ______ kotów leżało na podłodze.", hint: "Podaj formę liczebnika 'sześć' (dla zwierząt/rzeczy niemęskoosobowych).", answer: "Sześć" },
+            { question: "(6) ______ książek leżało na półce.", hint: "Podaj formę liczebnika 'sześć' (dla r. żeńskiego).", answer: "Sześć" },
+            { question: "Na ławce siedzi dwóch ______ (chłopiec).", hint: "Podaj rzeczownik w odpowiedniej formie.", answer: "chłopców" },
+            { question: "Na ławce siedzą dwaj ______ (chłopiec).", hint: "Podaj rzeczownik w odpowiedniej formie.", answer: "chłopcy" },
+            { question: "Dwie ______ (studentka) nie zdały egzaminu.", hint: "Podaj rzeczownik w odpowiedniej formie.", answer: "studentki" },
+            { question: "Pięciu ______ (pan) idzie ulicą.", hint: "Podaj rzeczownik w odpowiedniej formie.", answer: "panów" },
+            { question: "Pięciu panów ______ (iść) ulicą.", hint: "Podaj czasownik w odpowiedniej formie.", answer: "idzie" },
+            { question: "Dwaj chłopcy ______ (siedzieć) na ławce.", hint: "Podaj czasownik w odpowiedniej formie.", answer: "siedzą" },
+            { question: "______ (3 - liczebnik zbiorowy) dzieci biegało po parku.", hint: "Podaj liczebnik zbiorowy.", answer: "Troje" },
+            { question: "Na półce leżało dużo ______ (książka).", hint: "Podaj rzeczownik w odpowiedniej formie.", answer: "książek" },
+            { question: "Kilka osób ______ (czekać) na autobus.", hint: "Podaj czasownik w odpowiedniej formie.", answer: "czekało" },
+            { question: "Nie mam ______ (jeden) słownika.", hint: "Odmień liczebnik 'jeden'.", answer: "jednego" }
+        ];
+
+        let currentQuizQuestions = []; // Questions for the current quiz session
+        let incorrectlyAnsweredQuestions = []; // Stores questions answered incorrectly
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let autoNextTimeout;
+
+        const questionTextElement = document.getElementById('question-text');
+        const answerInputElement = document.getElementById('answer-input');
+        const submitButton = document.getElementById('submit-btn');
+        const nextButton = document.getElementById('next-btn');
+        const feedbackArea = document.getElementById('feedback-area');
+        const scoreArea = document.getElementById('score-area');
+        const restartButton = document.getElementById('restart-btn');
+        const retryIncorrectButton = document.getElementById('retry-incorrect-btn'); // New button
+        const questionCounterElement = document.getElementById('question-counter');
+        const progressBarElement = document.getElementById('progress-bar');
+        const finalButtonsContainer = document.getElementById('final-buttons'); // New container for final buttons
+
+        // Theme toggle elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        let isDarkMode = localStorage.getItem('theme') === 'dark'; // Check local storage for theme preference
+
+        /**
+         * Applies the selected theme (dark/light) to the body and updates the toggle button icon.
+         */
+        function applyTheme() {
+            if (isDarkMode) {
+                document.body.classList.add('dark');
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            } else {
+                document.body.classList.remove('dark');
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            }
+        }
+
+        /**
+         * Initializes the quiz, setting up the questions, score, and UI state.
+         * @param {Array} questionsToUse - The array of questions to use for the current quiz session.
+         */
+        function initializeQuiz(questionsToUse = originalQuestions) {
+            currentQuizQuestions = [...questionsToUse]; // Copy questions to avoid modifying original
+            currentQuestionIndex = 0;
+            score = 0;
+            // Only clear incorrectly answered questions if starting a fresh quiz, not a retry of incorrect ones
+            if (questionsToUse === originalQuestions) {
+                incorrectlyAnsweredQuestions = [];
+            }
+
+            document.getElementById('quiz-area').style.display = 'block';
+            scoreArea.style.display = 'none';
+            finalButtonsContainer.style.display = 'none'; // Hide final buttons
+            document.getElementById('progress-container').style.display = 'block';
+            nextButton.textContent = 'Następne pytanie'; // Reset button text
+            loadQuestion();
+        }
+
+        /**
+         * Loads the current question into the quiz interface.
+         * Clears any previous feedback, enables input, and updates progress.
+         */
+        function loadQuestion() {
+            clearTimeout(autoNextTimeout); // Clear any pending auto-next
+            if (currentQuestionIndex < currentQuizQuestions.length) {
+                const currentQuestion = currentQuizQuestions[currentQuestionIndex];
+                // Replace placeholder with a tooltip for hints
+                let questionHTML = currentQuestion.question.replace(/______/,
+                    '<span class="tooltip group relative cursor-help border-b border-dashed border-gray-400 dark:border-gray-500">' +
+                    '______<span class="tooltiptext absolute bottom-full left-1/2 -translate-x-1/2 ' +
+                    'bg-gray-700 text-white text-sm rounded-md p-3 w-64 text-left opacity-0 ' +
+                    'invisible transition-opacity duration-300 shadow-lg border border-gray-600 ' +
+                    'group-hover:opacity-100 group-hover:visible dark:bg-gray-700 dark:border-gray-600">' +
+                    (currentQuestion.hint || 'Wpisz swoją odpowiedź') + '</span></span>');
+                questionTextElement.innerHTML = questionHTML;
+                answerInputElement.value = '';
+                feedbackArea.style.display = 'none';
+                submitButton.style.display = 'block'; // Use 'block' for Tailwind's default display
+                nextButton.style.display = 'none';
+                answerInputElement.disabled = false;
+                answerInputElement.focus();
+                updateProgress();
+            } else {
+                showFinalScore();
+            }
+        }
+
+        /**
+         * Updates the question counter and the progress bar.
+         */
+        function updateProgress() {
+            questionCounterElement.textContent = `Pytanie ${currentQuestionIndex + 1} z ${currentQuizQuestions.length}`;
+            const progressPercentage = ((currentQuestionIndex + 1) / currentQuizQuestions.length) * 100;
+            progressBarElement.style.width = `${progressPercentage}%`;
+        }
+
+        /**
+         * Handles the submission of an answer.
+         * Checks if the answer is correct, updates score, and shows feedback.
+         * Sets a timeout for automatic progression to the next question.
+         */
+        function handleSubmit() {
+            const userAnswer = answerInputElement.value.trim();
+            if (currentQuestionIndex < 0 || currentQuestionIndex >= currentQuizQuestions.length) {
+                console.error("Nieprawidłowy indeks pytania:", currentQuestionIndex);
+                return;
+            }
+            const currentQuestion = currentQuizQuestions[currentQuestionIndex];
+            const correctAnswer = currentQuestion.answer;
+
+            feedbackArea.style.display = 'block';
+            answerInputElement.disabled = true;
+            submitButton.style.display = 'none';
+
+            if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                score++;
+                feedbackArea.textContent = 'Poprawna odpowiedź!';
+                feedbackArea.className = 'feedback bg-green-100 text-green-800 border border-green-300 p-4 rounded-md text-center dark:bg-green-800 dark:text-green-100 dark:border-green-700';
+            } else {
+                // Add to incorrectly answered questions only if it's not already there (e.g., if retrying incorrect)
+                if (currentQuizQuestions === originalQuestions || !incorrectlyAnsweredQuestions.includes(currentQuestion)) {
+                     incorrectlyAnsweredQuestions.push(currentQuestion);
+                }
+                feedbackArea.innerHTML = `Niepoprawna odpowiedź! <br>Prawidłowa odpowiedź: <strong class="text-blue-600 dark:text-blue-300">${correctAnswer}</strong>`;
+                feedbackArea.className = 'feedback bg-red-100 text-red-800 border border-red-300 p-4 rounded-md text-center dark:bg-red-800 dark:text-red-100 dark:border-red-700';
+            }
+
+            if (currentQuestionIndex < currentQuizQuestions.length - 1) {
+                nextButton.style.display = 'block';
+                autoNextTimeout = setTimeout(() => {
+                    handleNext();
+                }, 2500); // Auto-advance after 2.5 seconds
+            } else {
+                nextButton.style.display = 'block';
+                nextButton.textContent = 'Zobacz wyniki';
+                nextButton.focus();
+            }
+        }
+
+        /**
+         * Handles progression to the next question or final score display.
+         */
+        function handleNext() {
+            clearTimeout(autoNextTimeout); // Clear any pending auto-next
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuizQuestions.length) {
+                loadQuestion();
+            } else {
+                showFinalScore();
+            }
+        }
+
+        /**
+         * Displays the final score and options to restart or retry incorrect questions.
+         */
+        function showFinalScore() {
+            clearTimeout(autoNextTimeout);
+            document.getElementById('quiz-area').style.display = 'none';
+            feedbackArea.style.display = 'none';
+            document.getElementById('progress-container').style.display = 'none';
+            scoreArea.style.display = 'block';
+            scoreArea.innerHTML = `Test zakończony! <br>Twój wynik: ${score} z ${currentQuizQuestions.length} (${Math.round((score/currentQuizQuestions.length)*100)}%)`;
+
+            // Show final buttons
+            finalButtonsContainer.style.display = 'flex';
+            nextButton.style.display = 'none';
+
+            // Enable/disable retry incorrect button based on if there were incorrect answers
+            if (incorrectlyAnsweredQuestions.length > 0) {
+                retryIncorrectButton.style.display = 'block';
+            } else {
+                retryIncorrectButton.style.display = 'none';
+            }
+        }
+
+        // Event listener for 'Enter' key press on the answer input
+        answerInputElement.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                if (submitButton.style.display !== 'none' && !answerInputElement.disabled) {
+                    handleSubmit();
+                } else if (nextButton.style.display !== 'none') {
+                    handleNext();
+                }
+            }
+        });
+
+        // Event listeners for buttons
+        submitButton.addEventListener('click', handleSubmit);
+        nextButton.addEventListener('click', handleNext);
+        restartButton.addEventListener('click', () => initializeQuiz(originalQuestions)); // Restart full quiz
+        retryIncorrectButton.addEventListener('click', () => {
+            if (incorrectlyAnsweredQuestions.length > 0) {
+                initializeQuiz(incorrectlyAnsweredQuestions); // Start quiz with only incorrect questions
+                incorrectlyAnsweredQuestions = []; // Clear for the new retry session
+            }
+        });
+
+        // Theme toggle event listener
+        themeToggle.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            applyTheme();
+        });
+
+        // Initial setup
+        applyTheme(); // Apply theme on load
+        initializeQuiz(); // Start the first quiz
+    </script>
 
 </body>
-
 </html>
-
-
